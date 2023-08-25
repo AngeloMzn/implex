@@ -9,16 +9,16 @@ reverso = []
 quaseOrdenado = []
 count = 0
 value = inc
-while inc <= fim:
+while value <= fim:
     ordenado.append(value)
     value = value + stp
 
-while count != (fim - inc):
+while count != (fim - inc) + stp:
     number = random.randrange(inc, fim + 1, stp)
     aleatorio.append(number)
-    count += 1
+    count += stp
 value = fim
-while value != inc:
+while value != inc-stp:
     reverso.append(value)
     value = value - stp
 
