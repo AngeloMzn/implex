@@ -1,33 +1,49 @@
 import random
-inc = int(input('digite o valor de inicio do vetor:'))
-fim = int(input('digite o valor final do vetor:'))
-stp = int(input('digite o intervalo de soma entre as posicoes do vetor:'))
-rpt = int(input('digite o numero de vezes que o teste deve se repetir:'))
-ordenado = []
-aleatorio = []
-reverso = []
-quaseOrdenado = []
-count = 0
-value = inc
-while value <= fim:
-    ordenado.append(value)
-    value = value + stp
 
-while count != (fim - inc) + stp:
-    number = random.randrange(inc, fim + 1, stp)
-    aleatorio.append(number)
-    count += stp
-value = fim
-while value != inc-stp:
-    reverso.append(value)
-    value = value - stp
+def criar_vetor_ordenado(inicio, fim, stp):
+    return list(range(inicio, fim + 1, stp))
 
-quaseOrdenado = ordenado
-n = len(quaseOrdenado)
-numShuffle = n * 0.1  # 10% do vetor
-indicesShuffle = random.sample(range(n), numShuffle)
-for i in indicesShuffle:
-    j = random.choice(indicesShuffle)
-    quaseOrdenado[i], quaseOrdenado[j] = quaseOrdenado[j], quaseOrdenado[i]
-for i in range(len(quaseOrdenado)):
-    print(quaseOrdenado[i])
+def criar_vetor_aleatorio(vetor_ordenado):
+    
+    vetor_aleatorio = vetor_ordenado[:]
+    tamanho_desordem = int(len(vetor_ordenado))
+    indices_desordenados = random.sample(range(len(vetor_ordenado)), tamanho_desordem)
+    for idx in indices_desordenados:
+        vetor_aleatorio[idx] = random.choice(vetor_ordenado) 
+    
+    return vetor_aleatorio
+
+def criar_vetor_reverso(inicio, fim, stp):
+    return list(range(fim, inicio - 1, -stp))
+
+def criar_vetor_quase_ordenado(vetor_ordenado, porcentagem_desordem):
+    tamanho_desordem = int(len(vetor_ordenado) * porcentagem_desordem)
+    indices_desordenados = random.sample(range(len(vetor_ordenado)), tamanho_desordem)
+    
+    vetor_quase_ordenado = vetor_ordenado[:]
+    
+    for idx in indices_desordenados:
+        vetor_quase_ordenado[idx] = random.choice(vetor_ordenado)
+    
+    return vetor_quase_ordenado
+
+inc = int(input('Digite o valor de início do vetor: '))
+fim = int(input('Digite o valor final do vetor: '))
+stp = int(input('Digite o intervalo de soma entre as posições do vetor: '))
+rpt = int(input('Digite o número de vezes que o teste deve se repetir: '))
+
+tamanho_vetor = (fim - inc) // stp + 1
+
+# Criar o vetor ordenado
+vetor_ordenado = criar_vetor_ordenado(inc, fim, stp)
+
+# Criar os outros vetores
+vetor_aleatorio = criar_vetor_aleatorio(vetor_ordenado)
+vetor_reverso = criar_vetor_reverso(inc, fim, stp)
+vetor_quase_ordenado = criar_vetor_quase_ordenado(vetor_ordenado, 0.2)  # Exemplo de 20% de desordem
+
+# Imprimir os vetores
+print('Vetor Ordenado:', vetor_ordenado)
+print('Vetor Aleatório:', vetor_aleatorio)
+print('Vetor Reverso:', vetor_reverso)
+print('Vetor Quase Ordenado:', vetor_quase_ordenado)
