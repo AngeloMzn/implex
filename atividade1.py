@@ -22,13 +22,22 @@ def criar_vetor_aleatorio(vetor_ordenado):
 def criar_vetor_reverso(inicio, fim, stp):
     return list(range(fim, inicio - 1, -stp))
 
-def criar_vetor_quase_ordenado(vetor_ordenado, porcentagem_desordem):
-    tamanho_desordem = int(len(vetor_ordenado) * porcentagem_desordem)
-    indices_desordenados = random.sample(range(len(vetor_ordenado)), tamanho_desordem)
-    vetor_quase_ordenado = vetor_ordenado[:]
-    for idx in indices_desordenados:
-        vetor_quase_ordenado[idx] = random.choice(vetor_ordenado)
-    return vetor_quase_ordenado
+def criar_vetor_parcialmente_ordenado(vetor_ordenado, percentual_desordem):
+    if percentual_desordem <= 0 or percentual_desordem > 100:
+        raise ValueError("O percentual de desordem deve estar entre 0 e 100.")
+    num_elementos = len(vetor_ordenado)
+    num_elementos_desordenar = int(num_elementos * percentual_desordem / 100)
+    novo_vetor = vetor_ordenado.copy()
+    while True:
+        indices_desordenar = random.sample(range(num_elementos), num_elementos_desordenar)
+        indices_desordenar.sort()
+        valores_desordenados = [novo_vetor.pop(i) for i in reversed(indices_desordenar)]
+        random.shuffle(valores_desordenados)
+        for i, indice in enumerate(indices_desordenar):
+            novo_vetor.insert(indice, valores_desordenados[i])
+        if novo_vetor != sorted(vetor_ordenado):
+            break
+    return novo_vetor
 #insertionsort
 def insertion_sort(vetor):
     result = vetor.copy()
@@ -67,11 +76,12 @@ def merge(left, right):
     return result
 
 def merge_sort(vetor):
-    if len(vetor) <= 1:
-        return vetor
-    mid = len(vetor) // 2
-    left_half = vetor[:mid]
-    right_half = vetor[mid:]
+    result = vetor.copy()
+    if len(result) <= 1:
+        return result
+    mid = len(result) // 2
+    left_half = result[:mid]
+    right_half = result[mid:]
     left_half = merge_sort(left_half)
     right_half = merge_sort(right_half)
     return merge(left_half, right_half)
@@ -99,44 +109,34 @@ def heap_sort(vetor):
         heapify(result, i, 0)
     return result
 #quicksort
-def partition(result, low, high):
-    pivo = result[low]
-    left = low + 1
-    right = high
-    done = False
-    while not done:
-        while left <= right and result[left] <= pivo:
-            left += 1
-        while result[right] >= pivo and right >=left:
-            right -= 1
-        if right < left:
-            done= True
-        else:
-            result[left], result[right] = result[right], result[left]
-    result[low], result[right] = result[right], result[low]
-    return right
-
-def quick_sort(vetor, low, high):
+def quick_sort(vetor):
     result = vetor.copy()
-    if low < high:
-        pivo_index = partition(result, low, high)
-        quick_sort(result, low, pivo_index)
-        quick_sort(result, pivo_index + 1, high)
-    return result
+    if len(result) <= 1:
+        return result
+    else:
+        pivot = result[len(result) // 2]
+        left = [x for x in result if x < pivot]
+        middle = [x for x in result if x == pivot]
+        right = [x for x in result if x > pivot]
+        
+        return quick_sort(left) + middle + quick_sort(right)
 #countingsort
 def counting_sort(vetor):
-    max_val = max(vetor)
-    min_val = min(vetor)
-    range = max_val - min_val + 1
-    count_vetor = [0] * range
-    for num in vetor:
-        count_vetor[num - min_val] += 1  
-    for i in range(1, len(count_vetor)):
-        count_vetor[i] += count_vetor[i - 1]
-    result = [0] * len(vetor)
-    for num in reversed(vetor):
-        result[count_vetor[num - min_val] - 1] = num
-        count_vetor[num - min_val] -= 1
+    aux = vetor.copy()
+    max_val = max(aux)
+    count = [0] * (max_val + 1)
+    result = [0] * len(aux)
+    
+    for num in aux:
+        count[num] += 1
+    
+    for i in range(1, len(count)):
+        count[i] += count[i - 1]
+    
+    for num in aux:
+        result[count[num] - 1] = num
+        count[num] -= 1
+    
     return result
 
 #################################################EXECUCAO####################################################
@@ -151,19 +151,47 @@ tamanho_vetor = (fim - inc) // stp + 1
 vetor_ordenado = criar_vetor_ordenado(inc, fim, stp)
 vetor_aleatorio = criar_vetor_aleatorio(vetor_ordenado)
 vetor_reverso = criar_vetor_reverso(inc, fim, stp)
-vetor_quase_ordenado = criar_vetor_quase_ordenado(vetor_ordenado, 0.1)  
+vetor_quase_ordenado = criar_vetor_parcialmente_ordenado(vetor_ordenado, 30)  
 
 # prints para ver os vetores
-#print('Vetor Ordenado:', vetor_ordenado)
+print('Vetor Ordenado:', vetor_ordenado)
 print('Vetor Aleatório:', vetor_aleatorio)
-# print('Vetor Reverso:', vetor_reverso)
-# print('Vetor Quase Ordenado:', vetor_quase_ordenado)
+print('Vetor Reverso:', vetor_reverso)
+print('Vetor Quase Ordenado:', vetor_quase_ordenado)
 for i in range(rpt):
     #insertions
+    result_vetor_ordenado_insertion = insertion_sort(vetor_ordenado)
     result_vetor_aleatorio_insertion = insertion_sort(vetor_aleatorio)
-    #selection
+    result_vetor_reverso_insertion = insertion_sort(vetor_reverso)
+    result_vetor_quase_ordenado_insertion = insertion_sort(vetor_quase_ordenado)
+    #selections
+    result_vetor_ordenado_selection= selection_sort(vetor_ordenado)
     result_vetor_aleatorio_selection = selection_sort(vetor_aleatorio)
-    print(result_vetor_aleatorio_selection)
-    print(vetor_aleatorio)
-
+    result_vetor_reverso_selection = selection_sort(vetor_reverso)
+    result_vetor_quase_ordenado_selection = selection_sort(vetor_quase_ordenado)
+    #mergesorts
+    result_vetor_ordenado_mergesort = merge_sort(vetor_ordenado)
+    result_vetor_aleatorio_mergesort = merge_sort(vetor_aleatorio)
+    result_vetor_reverso_mergesort = merge_sort(vetor_reverso)
+    result_vetor_quase_ordenado_mergesort = merge_sort(vetor_quase_ordenado)
+    #heapsorts
+    result_vetor_ordenado_heapsort = heap_sort(vetor_ordenado)
+    result_vetor_aleatorio_heapsort = heap_sort(vetor_aleatorio)
+    result_vetor_reverso_heapsort = heap_sort(vetor_reverso)
+    result_vetor_quase_ordenado_heapsort = heap_sort(vetor_quase_ordenado)
+    #quicksorts
+    result_vetor_ordenado_quicksort = quick_sort(vetor_ordenado)
+    result_vetor_aleatorio_quicksort = quick_sort(vetor_aleatorio)
+    result_vetor_reverso_quicksort = quick_sort(vetor_reverso)
+    #countingsorts
+    result_vetor_ordenado_countingsort = counting_sort(vetor_ordenado)
+    result_vetor_aleatorio_countingsort = counting_sort(vetor_aleatorio)
+    result_vetor_reverso_countingsort = counting_sort(vetor_reverso)
+    print('=================================================')
+    print('vetor em estudo:', result_vetor_quase_ordenado_heapsort)
+    print('=================================================')
+    print('Vetor Ordenado:', vetor_ordenado)
+    print('Vetor Aleatório:', vetor_aleatorio)
+    print('Vetor Reverso:', vetor_reverso)
+    print('Vetor Quase Ordenado:', vetor_quase_ordenado)
     
