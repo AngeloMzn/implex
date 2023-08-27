@@ -1,6 +1,6 @@
 #Angelo Vinicius Hernandez Mazarin
 import random
-from unittest import result
+import time
 #criação de vetores
 def criar_vetor_ordenado(inicio, fim, stp):
     return list(range(inicio, fim + 1, stp))
@@ -160,9 +160,19 @@ print('Vetor Reverso:', vetor_reverso)
 print('Vetor Quase Ordenado:', vetor_quase_ordenado)
 for i in range(rpt):
     #insertions
+    inicio = time.time()
     result_vetor_ordenado_insertion = insertion_sort(vetor_ordenado)
+    fim = time.time()
+    tempo_vetor_ordenado_insertion = fim - inicio
+    inicio = time.time()
     result_vetor_aleatorio_insertion = insertion_sort(vetor_aleatorio)
+    fim = time.time()
+    tempo_vetor_aleatorio_insertion = fim - inicio
+    print('insertion aleatorio: ', tempo_vetor_aleatorio_insertion)
+    inicio = time.time()
     result_vetor_reverso_insertion = insertion_sort(vetor_reverso)
+    fim = time.time()
+    tempo_vetor_reverso_insertion = fim - inicio
     result_vetor_quase_ordenado_insertion = insertion_sort(vetor_quase_ordenado)
     #selections
     result_vetor_ordenado_selection= selection_sort(vetor_ordenado)
@@ -183,15 +193,9 @@ for i in range(rpt):
     result_vetor_ordenado_quicksort = quick_sort(vetor_ordenado)
     result_vetor_aleatorio_quicksort = quick_sort(vetor_aleatorio)
     result_vetor_reverso_quicksort = quick_sort(vetor_reverso)
+    result_vetor_quase_ordenado_quicksort = quick_sort(vetor_quase_ordenado)
     #countingsorts
     result_vetor_ordenado_countingsort = counting_sort(vetor_ordenado)
     result_vetor_aleatorio_countingsort = counting_sort(vetor_aleatorio)
     result_vetor_reverso_countingsort = counting_sort(vetor_reverso)
-    print('=================================================')
-    print('vetor em estudo:', result_vetor_quase_ordenado_heapsort)
-    print('=================================================')
-    print('Vetor Ordenado:', vetor_ordenado)
-    print('Vetor Aleatório:', vetor_aleatorio)
-    print('Vetor Reverso:', vetor_reverso)
-    print('Vetor Quase Ordenado:', vetor_quase_ordenado)
-    
+    result_vetor_quase_ordenado_countingsort = counting_sort(vetor_quase_ordenado)
