@@ -5,6 +5,7 @@ import time
 def criar_vetor_ordenado(inicio, fim, stp):
     vetor_ordenado = [inicio]
     valor_atual = inicio
+    
     while valor_atual + stp <= fim:
         valor_atual += stp
         vetor_ordenado.append(valor_atual)
@@ -18,6 +19,7 @@ def criar_vetor_aleatorio(vetor_ordenado):
         numero_escolhido = random.choice(vetor_ordenado)
         while numero_escolhido in numeros_usados:
             numero_escolhido = random.choice(vetor_ordenado)
+        
         numeros_usados.add(numero_escolhido)
         vetor_aleatorio[idx] = numero_escolhido 
     return vetor_aleatorio
@@ -75,7 +77,6 @@ def merge(left, right):
     result.extend(left[left_index:])
     result.extend(right[right_index:])
     return result
-
 def merge_sort(vetor):
     result = vetor.copy()
     if len(result) <= 1:
@@ -86,7 +87,6 @@ def merge_sort(vetor):
     left_half = merge_sort(left_half)
     right_half = merge_sort(right_half)
     return merge(left_half, right_half)
-
 #heapsort
 def heapify(result, n, i):
     largest = i
@@ -99,6 +99,7 @@ def heapify(result, n, i):
     if largest != i:
         result[i], result[largest] = result[largest], result[i]
         heapify(result, n, largest)
+
 def heap_sort(vetor):
     result = vetor.copy()
     n = len(result)
@@ -126,13 +127,17 @@ def counting_sort(vetor):
     max_val = max(aux)
     count = [0] * (max_val + 1)
     result = [0] * len(aux)
+    
     for num in aux:
         count[num] += 1
+    
     for i in range(1, len(count)):
         count[i] += count[i - 1]
+    
     for num in aux:
         result[count[num] - 1] = num
         count[num] -= 1
+    
     return result
 rpt = int(input('Digite o número de vezes que o teste deve se repetir: '))
 inc = 0
@@ -327,7 +332,6 @@ for i in range(rpt):
     vet_tempo_countingsorts_quase_ordenado.append(tempo_vetor_quase_ordenado_countingsort)
     #incrementa o tamanho do vetor
     fim = fim * 10
-
 print("[ordenado]")
 print("n   insertions   selections   mergesorts   heapsorts   quicksorts   countingsorts")
 print("-------------------------------------------------------------------------------")
@@ -341,8 +345,45 @@ for i in range(rpt):
         vet_tempo_quicksorts_ordenado[i], 
         vet_tempo_countingsorts_ordenado[i]
     ))
-
-
-
-
-    
+print()
+print("[aleatorio]")
+print("n   insertions   selections   mergesorts   heapsorts   quicksorts   countingsorts")
+print("-------------------------------------------------------------------------------")
+for i in range(rpt):
+    print("{:.0f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}".format(
+        vet_tamanhos[i], 
+        vet_tempo_insertions_aleatorio[i], 
+        vet_tempo_selections_aleatorio[i], 
+        vet_tempo_mergesorts_aleatorio[i], 
+        vet_tempo_heapsorts_aleatorio[i], 
+        vet_tempo_quicksorts_aleatorio[i], 
+        vet_tempo_countingsorts_aleatorio[i]
+    ))
+print()
+print("[reverso]")
+print("n   insertions   selections   mergesorts   heapsorts   quicksorts   countingsorts")
+print("-------------------------------------------------------------------------------")
+for i in range(rpt):
+    print("{:.0f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}".format(
+        vet_tamanhos[i], 
+        vet_tempo_insertions_reverso[i], 
+        vet_tempo_selections_reverso[i], 
+        vet_tempo_mergesorts_reverso[i], 
+        vet_tempo_heapsorts_reverso[i], 
+        vet_tempo_quicksorts_reverso[i], 
+        vet_tempo_countingsorts_reverso[i]
+    ))
+print()
+print("[Quase ordenado]")
+print("n   insertions   selections   mergesorts   heapsorts   quicksorts   countingsorts")
+print("-------------------------------------------------------------------------------")
+for i in range(rpt):
+    print("{:.0f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}".format(
+        vet_tamanhos[i], 
+        vet_tempo_insertions_quase_ordenado[i], 
+        vet_tempo_selections_quase_ordenado[i], 
+        vet_tempo_mergesorts_quase_ordenado[i], 
+        vet_tempo_heapsorts_quase_ordenado[i], 
+        vet_tempo_quicksorts_quase_ordenado[i], 
+        vet_tempo_countingsorts_quase_ordenado[i]
+    ))
