@@ -5,13 +5,10 @@ import time
 def criar_vetor_ordenado(inicio, fim, stp):
     vetor_ordenado = [inicio]
     valor_atual = inicio
-    
     while valor_atual + stp <= fim:
         valor_atual += stp
         vetor_ordenado.append(valor_atual)
-    
     return vetor_ordenado
-
 def criar_vetor_aleatorio(vetor_ordenado):
     vetor_aleatorio = vetor_ordenado[:]
     tamanho_desordem = int(len(vetor_ordenado))
@@ -21,14 +18,11 @@ def criar_vetor_aleatorio(vetor_ordenado):
         numero_escolhido = random.choice(vetor_ordenado)
         while numero_escolhido in numeros_usados:
             numero_escolhido = random.choice(vetor_ordenado)
-        
         numeros_usados.add(numero_escolhido)
         vetor_aleatorio[idx] = numero_escolhido 
     return vetor_aleatorio
-
 def criar_vetor_reverso(inicio, fim, stp):
     return list(range(fim, inicio - 1, -stp))
-
 def criar_vetor_parcialmente_ordenado(vetor_ordenado, percentual_desordem):
     if percentual_desordem <= 0 or percentual_desordem > 100:
         raise ValueError("O percentual de desordem deve estar entre 0 e 100.")
