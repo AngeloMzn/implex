@@ -332,6 +332,7 @@ for i in range(rpt):
     vet_tempo_countingsorts_quase_ordenado.append(tempo_vetor_quase_ordenado_countingsort)
     #incrementa o tamanho do vetor
     fim = fim * 10
+"""
 print("[ordenado]")
 print("n   insertions   selections   mergesorts   heapsorts   quicksorts   countingsorts")
 print("-------------------------------------------------------------------------------")
@@ -387,3 +388,58 @@ for i in range(rpt):
         vet_tempo_quicksorts_quase_ordenado[i], 
         vet_tempo_countingsorts_quase_ordenado[i]
     ))
+"""
+with open("relatorio.txt", "w") as arquivo:
+    arquivo.write("[ordenado]\n")
+    arquivo.write("n   insertions   selections   mergesorts   heapsorts   quicksorts   countingsorts\n")
+    arquivo.write("-------------------------------------------------------------------------------\n")
+    for i in range(rpt):
+        arquivo.write("{:.0f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}\n".format(
+            vet_tamanhos[i], 
+            vet_tempo_insertions_ordenado[i], 
+            vet_tempo_selections_ordenado[i], 
+            vet_tempo_mergesorts_ordenado[i], 
+            vet_tempo_heapsorts_ordenado[i], 
+            vet_tempo_quicksorts_ordenado[i], 
+            vet_tempo_countingsorts_ordenado[i]
+        ))
+    arquivo.write("\n[aleatorio]\n")
+    arquivo.write("n   insertions   selections   mergesorts   heapsorts   quicksorts   countingsorts\n")
+    arquivo.write("-------------------------------------------------------------------------------\n")
+    for i in range(rpt):
+        arquivo.write("{:.0f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}\n".format(
+            vet_tamanhos[i], 
+            vet_tempo_insertions_aleatorio[i], 
+            vet_tempo_selections_aleatorio[i], 
+            vet_tempo_mergesorts_aleatorio[i], 
+            vet_tempo_heapsorts_aleatorio[i], 
+            vet_tempo_quicksorts_aleatorio[i], 
+            vet_tempo_countingsorts_aleatorio[i]
+        ))
+    arquivo.write("\n[reverso]\n")
+    arquivo.write("n   insertions   selections   mergesorts   heapsorts   quicksorts   countingsorts\n")
+    arquivo.write("-------------------------------------------------------------------------------\n")
+    for i in range(rpt):
+        arquivo.write("{:.0f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}\n".format(
+            vet_tamanhos[i], 
+            vet_tempo_insertions_reverso[i], 
+            vet_tempo_selections_reverso[i], 
+            vet_tempo_mergesorts_reverso[i], 
+            vet_tempo_heapsorts_reverso[i], 
+            vet_tempo_quicksorts_reverso[i], 
+            vet_tempo_countingsorts_reverso[i]
+        ))
+    arquivo.write("\n[Quase ordenado]\n")
+    arquivo.write("n   insertions   selections   mergesorts   heapsorts   quicksorts   countingsorts\n")
+    arquivo.write("-------------------------------------------------------------------------------\n")
+    for i in range(rpt):
+        arquivo.write("{:.0f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}\n".format(
+            vet_tamanhos[i], 
+            vet_tempo_insertions_quase_ordenado[i], 
+            vet_tempo_selections_quase_ordenado[i], 
+            vet_tempo_mergesorts_quase_ordenado[i], 
+            vet_tempo_heapsorts_quase_ordenado[i], 
+            vet_tempo_quicksorts_quase_ordenado[i], 
+            vet_tempo_countingsorts_quase_ordenado[i]
+        ))
+    
