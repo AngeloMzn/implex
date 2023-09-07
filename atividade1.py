@@ -1,7 +1,6 @@
 #Angelo Vinicius Hernandez Mazarin
 import random
 import time
-import matplotlib.pyplot as plt
 # comando para instalar o matplot: pip install matplotlib
 #criação de vetores
 def criar_vetor_ordenado(inicio, fim, stp):
@@ -143,7 +142,7 @@ def counting_sort(vetor):
     return result
 rpt = int(input('Digite o número de vezes que o teste deve se repetir: '))
 inc = 0
-fim = 1000
+fim = 10000
 stp = 1
 vet_tempo_insertions_ordenado = []
 vet_tempo_insertions_aleatorio = []
@@ -333,7 +332,7 @@ for i in range(rpt):
     tempo_vetor_quase_ordenado_countingsort = fim_tmp - inicio_tmp
     vet_tempo_countingsorts_quase_ordenado.append(tempo_vetor_quase_ordenado_countingsort)
     #incrementa o tamanho do vetor
-    fim = fim * 10
+    fim = fim + 5000
 """
 print("[ordenado]")
 print("n   insertions   selections   mergesorts   heapsorts   quicksorts   countingsorts")
@@ -444,59 +443,4 @@ with open("relatorio.txt", "w") as arquivo:
             vet_tempo_quicksorts_quase_ordenado[i], 
             vet_tempo_countingsorts_quase_ordenado[i]
         ))
-#plotando grafico vet ordenado
-plt.figure(figsize=(10, 6))   
-plt.plot(vet_tamanhos, vet_tempo_selections_ordenado, label='Selection Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_insertions_ordenado, label='Insertion Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_mergesorts_ordenado, label='Merge Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_heapsorts_ordenado, label='Heap Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_quicksorts_ordenado, label='Quick Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_countingsorts_ordenado, label='Counting Sort', marker='o')
-plt.xlabel('Número de Elementos')
-plt.ylabel('Tempo de Execução (segundos)')
-plt.title('Tempo de execução por numero de elementos do vetor ordenado')
-plt.legend()
-plt.grid(True) 
-plt.show()
-#plotando grafico vet aleatorio
-plt.figure(figsize=(10, 6))   
-plt.plot(vet_tamanhos, vet_tempo_selections_aleatorio, label='Selection Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_insertions_aleatorio, label='Insertion Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_mergesorts_aleatorio, label='Merge Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_heapsorts_aleatorio, label='Heap Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_quicksorts_aleatorio, label='Quick Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_countingsorts_aleatorio, label='Counting Sort', marker='o')
-plt.xlabel('Número de Elementos')
-plt.ylabel('Tempo de Execução (segundos)')
-plt.title('Tempo de execução por numero de elementos do vetor aleatorio')
-plt.legend()
-plt.grid(True) 
-plt.show()
-#plotando grafico vet reverso
-plt.figure(figsize=(10, 6))   
-plt.plot(vet_tamanhos, vet_tempo_selections_reverso, label='Selection Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_insertions_reverso, label='Insertion Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_mergesorts_reverso, label='Merge Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_heapsorts_reverso, label='Heap Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_quicksorts_reverso, label='Quick Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_countingsorts_reverso, label='Counting Sort', marker='o')
-plt.xlabel('Número de Elementos')
-plt.ylabel('Tempo de Execução (segundos)')
-plt.title('Tempo de execução por numero de elementos do vetor reverso')
-plt.legend()
-plt.grid(True) 
-plt.show()
-#plotando grafico vet quase ordenado
-plt.figure(figsize=(10, 6))   
-plt.plot(vet_tamanhos, vet_tempo_selections_quase_ordenado, label='Selection Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_insertions_quase_ordenado, label='Insertion Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_mergesorts_quase_ordenado, label='Merge Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_heapsorts_quase_ordenado, label='Heap Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_quicksorts_quase_ordenado, label='Quick Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_countingsorts_quase_ordenado, label='Counting Sort', marker='o')
-plt.xlabel('Número de Elementos')
-plt.ylabel('Tempo de Execução (segundos)')
-plt.title('Tempo de execução por numero de elementos do vetor quase_ordenado')
-plt.legend()
-plt.grid(True) 
-plt.show()
+

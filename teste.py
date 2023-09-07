@@ -1,33 +1,391 @@
-import matplotlib.pyplot as plt
+#Angelo Vinicius Hernandez Mazarin
+import random
+import time
+# comando para instalar o matplot: pip install matplotlib
+#criação de vetores
+def criar_vetor_ordenado(inicio, fim, stp):
+    vetor_ordenado = [inicio]
+    valor_atual = inicio
+    
+    while valor_atual + stp <= fim:
+        valor_atual += stp
+        vetor_ordenado.append(valor_atual)
+    return vetor_ordenado
+def criar_vetor_aleatorio(vetor_ordenado):
+    vetor_aleatorio = vetor_ordenado[:]
+    tamanho_desordem = int(len(vetor_ordenado))
+    indices_desordenados = random.sample(range(len(vetor_ordenado)), tamanho_desordem)
+    numeros_usados = set()
+    for idx in indices_desordenados:
+        numero_escolhido = random.choice(vetor_ordenado)
+        while numero_escolhido in numeros_usados:
+            numero_escolhido = random.choice(vetor_ordenado)
+        
+        numeros_usados.add(numero_escolhido)
+        vetor_aleatorio[idx] = numero_escolhido 
+    return vetor_aleatorio
+def criar_vetor_reverso(inicio, fim, stp):
+    return list(range(fim, inicio - 1, -stp))
+def criar_vetor_parcialmente_ordenado(vetor_ordenado, percentual_desordem):
+    if percentual_desordem <= 0 or percentual_desordem > 100:
+        raise ValueError("O percentual de desordem deve estar entre 0 e 100.")
+    num_elementos = len(vetor_ordenado)
+    num_elementos_desordenar = int(num_elementos * percentual_desordem / 100)
+    novo_vetor = vetor_ordenado.copy()
+    while True:
+        indices_desordenar = random.sample(range(num_elementos), num_elementos_desordenar)
+        indices_desordenar.sort()
+        valores_desordenados = [novo_vetor.pop(i) for i in reversed(indices_desordenar)]
+        random.shuffle(valores_desordenados)
+        for i, indice in enumerate(indices_desordenar):
+            novo_vetor.insert(indice, valores_desordenados[i])
+        if novo_vetor != sorted(vetor_ordenado):
+            break
+    return novo_vetor
+#insertionsort
+def insertion_sort(vetor):
+    result = vetor.copy()
+    for i in range(1, len(result)):
+        key = result[i]
+        j = i - 1
+        while j >= 0 and key < result[j]:
+            result[j + 1] = result[j]
+            j -= 1
+        result[j + 1] = key
+    return result
+#selectionsort
+def selection_sort(vetor):
+    result = vetor.copy()
+    n = len(result)
+    for i in range(n):
+        min_index = i
+        for j in range(i+1, n):
+            if result[j] < result[min_index]:
+                min_index = j      
+        result[i], result[min_index] = result[min_index], result[i]
+    return result
+#mergesort
+def merge(left, right):
+    result = []
+    left_index, right_index = 0, 0
+    while left_index < len(left) and right_index < len(right):
+        if left[left_index] < right[right_index]:
+            result.append(left[left_index])
+            left_index += 1
+        else:
+            result.append(right[right_index])
+            right_index += 1
+    result.extend(left[left_index:])
+    result.extend(right[right_index:])
+    return result
+def merge_sort(vetor):
+    result = vetor.copy()
+    if len(result) <= 1:
+        return result
+    mid = len(result) // 2
+    left_half = result[:mid]
+    right_half = result[mid:]
+    left_half = merge_sort(left_half)
+    right_half = merge_sort(right_half)
+    return merge(left_half, right_half)
+#heapsort
+def heapify(result, n, i):
+    largest = i
+    left = 2 * i + 1
+    right = 2 * i + 2
+    if left < n and result[left] > result[largest]:
+        largest = left
+    if right < n and result[right] > result[largest]:
+        largest = right
+    if largest != i:
+        result[i], result[largest] = result[largest], result[i]
+        heapify(result, n, largest)
 
-# Dados
-num_elementos = [1000, 2000, 3000, 4000, 5000]  # Número de elementos
-tempo_selection_sort = [1.23, 4.56, 9.87, 16.43, 25.67]  # Tempos para o Selection Sort
-tempo_insertion_sort = [0.98, 3.45, 7.89, 13.21, 22.34]  # Tempos para o Insertion Sort
-tempo_merge_sort = [0.45, 1.23, 2.67, 4.32, 7.89]  # Tempos para o Merge Sort
-tempo_heap_sort = [0.56, 1.78, 3.21, 5.67, 9.01]  # Tempos para o Heap Sort
-tempo_quick_sort = [0.34, 0.98, 2.12, 3.76, 6.43]  # Tempos para o Quick Sort
-tempo_counting_sort = [0.21, 0.45, 1.09, 1.98, 3.12]  # Tempos para o Counting Sort
+def heap_sort(vetor):
+    result = vetor.copy()
+    n = len(result)
+    for i in range(n // 2 - 1, -1, -1):
+        heapify(result, n, i)
+    for i in range(n - 1, 0, -1):
+        result[i], result[0] = result[0], result[i]
+        heapify(result, i, 0)
+    return result
+#quicksort
+def quick_sort(vetor):
+    result = vetor.copy()
+    if len(result) <= 1:
+        return result
+    else:
+        pivot = result[len(result) // 2]
+        left = [x for x in result if x < pivot]
+        middle = [x for x in result if x == pivot]
+        right = [x for x in result if x > pivot]
+        
+        return quick_sort(left) + middle + quick_sort(right)
+#countingsort
+def counting_sort(vetor):
+    aux = vetor.copy()
+    max_val = max(aux)
+    count = [0] * (max_val + 1)
+    result = [0] * len(aux)
+    
+    for num in aux:
+        count[num] += 1
+    
+    for i in range(1, len(count)):
+        count[i] += count[i - 1]
+    
+    for num in aux:
+        result[count[num] - 1] = num
+        count[num] -= 1
+    
+    return result
+rpt = int(input('Digite o número de vezes que o teste deve se repetir: '))
+inc = 0
+fim = 10000
+stp = 1
+vet_tempo_insertions_ordenado = []
+vet_tempo_insertions_aleatorio = []
+vet_tempo_insertions_reverso = []
+vet_tempo_insertions_quase_ordenado = []
+#
+vet_tempo_selections_ordenado = []
+vet_tempo_selections_aleatorio = []
+vet_tempo_selections_reverso = []
+vet_tempo_selections_quase_ordenado = []
+#
+vet_tempo_mergesorts_ordenado = []
+vet_tempo_mergesorts_aleatorio = []
+vet_tempo_mergesorts_reverso = []
+vet_tempo_mergesorts_quase_ordenado = []
+#
+vet_tempo_heapsorts_ordenado = []
+vet_tempo_heapsorts_aleatorio = []
+vet_tempo_heapsorts_reverso = []
+vet_tempo_heapsorts_quase_ordenado = []
+#
+vet_tempo_quicksorts_ordenado = []
+vet_tempo_quicksorts_aleatorio = []
+vet_tempo_quicksorts_reverso = []
+vet_tempo_quicksorts_quase_ordenado = []
+#
+vet_tempo_countingsorts_ordenado = []
+vet_tempo_countingsorts_aleatorio = []
+vet_tempo_countingsorts_reverso = []
+vet_tempo_countingsorts_quase_ordenado = []
+#
+vet_tamanhos = []
+for i in range(rpt):
+    vet_tamanhos.append(fim)
+    vetor_ordenado = criar_vetor_ordenado(inc, fim, stp)
+    vetor_aleatorio = criar_vetor_aleatorio(vetor_ordenado)
+    vetor_reverso = criar_vetor_reverso(inc, fim, stp)
+    vetor_quase_ordenado = criar_vetor_parcialmente_ordenado(vetor_ordenado, 30)  
+    #===============================insertions========================================
+    #ordenado
+    inicio_tmp = time.time()
+    result_vetor_ordenado_insertion = insertion_sort(vetor_ordenado)
+    fim_tmp = time.time()
+    tempo_vetor_ordenado_insertion = fim_tmp - inicio_tmp
+    vet_tempo_insertions_ordenado.append(tempo_vetor_ordenado_insertion)
+    #aleatorio
+    inicio_tmp = time.time()
+    result_vetor_aleatorio_insertion = insertion_sort(vetor_aleatorio)
+    fim_tmp = time.time()
+    tempo_vetor_aleatorio_insertion = fim_tmp - inicio_tmp
+    vet_tempo_insertions_aleatorio.append(tempo_vetor_aleatorio_insertion)
+    #reverso
+    inicio_tmp = time.time()
+    result_vetor_reverso_insertion = insertion_sort(vetor_reverso)
+    fim_tmp = time.time()
+    tempo_vetor_reverso_insertion = fim_tmp - inicio_tmp
+    vet_tempo_insertions_reverso.append(tempo_vetor_reverso_insertion)
+    #quase ordenado
+    inicio_tmp = time.time()
+    result_vetor_quase_ordenado_insertion = insertion_sort(vetor_quase_ordenado)
+    fim_tmp = time.time()
+    tempo_vetor_quase_ordenado_insertion = fim_tmp - inicio_tmp
+    vet_tempo_insertions_quase_ordenado.append(tempo_vetor_quase_ordenado_insertion)
+    #================================selections=======================================
+    #ordenado
+    inicio_tmp = time.time()
+    result_vetor_ordenado_selection= selection_sort(vetor_ordenado)
+    fim_tmp = time.time()
+    tempo_vetor_ordenado_selection = fim_tmp - inicio_tmp
+    vet_tempo_selections_ordenado.append(tempo_vetor_ordenado_selection)
+    #aleatorio
+    inicio_tmp = time.time()
+    result_vetor_aleatorio_selection = selection_sort(vetor_aleatorio)
+    fim_tmp = time.time()
+    tempo_vetor_aleatorio_selection = fim_tmp - inicio_tmp
+    vet_tempo_selections_aleatorio.append(tempo_vetor_aleatorio_selection)
+    #reverso
+    inicio_tmp = time.time()
+    result_vetor_reverso_selection = selection_sort(vetor_reverso)
+    fim_tmp = time.time()
+    tempo_vetor_reverso_selection = fim_tmp - inicio_tmp
+    vet_tempo_selections_reverso.append(tempo_vetor_reverso_selection)
+    #quase ordenado
+    inicio_tmp = time.time()
+    result_vetor_quase_ordenado_selection = selection_sort(vetor_quase_ordenado)
+    fim_tmp = time.time()
+    tempo_vetor_quase_ordenado_selection = fim_tmp - inicio_tmp
+    vet_tempo_selections_quase_ordenado.append(tempo_vetor_quase_ordenado_selection)
+    #==============================mergesorts=========================================
+    #ordenado
+    inicio_tmp = time.time()
+    result_vetor_ordenado_mergesort = merge_sort(vetor_ordenado)
+    fim_tmp = time.time()
+    tempo_vetor_ordenado_mergesort = fim_tmp - inicio_tmp
+    vet_tempo_mergesorts_ordenado.append(tempo_vetor_ordenado_mergesort)
+    #aleatorio
+    inicio_tmp = time.time()
+    result_vetor_aleatorio_mergesort = merge_sort(vetor_aleatorio)
+    fim_tmp = time.time()
+    tempo_vetor_aleatorio_mergesort = fim_tmp - inicio_tmp
+    vet_tempo_mergesorts_aleatorio.append(tempo_vetor_aleatorio_mergesort)
+    #reverso
+    inicio_tmp = time.time()
+    result_vetor_reverso_mergesort = merge_sort(vetor_reverso)
+    fim_tmp = time.time()
+    tempo_vetor_reverso_mergesort = fim_tmp - inicio_tmp
+    vet_tempo_mergesorts_reverso.append(tempo_vetor_reverso_mergesort)
+    #quase ordenado
+    inicio_tmp = time.time()
+    result_vetor_quase_ordenado_mergesort = merge_sort(vetor_quase_ordenado)
+    fim_tmp = time.time()
+    tempo_vetor_quase_ordenado_mergesort = fim_tmp - inicio_tmp
+    vet_tempo_mergesorts_quase_ordenado.append(tempo_vetor_quase_ordenado_mergesort)
+    #===============================heapsorts=========================================
+    #ordenado
+    inicio_tmp = time.time()
+    result_vetor_ordenado_heapsort = heap_sort(vetor_ordenado)
+    fim_tmp = time.time()
+    tempo_vetor_ordenado_heapsort = fim_tmp - inicio_tmp
+    vet_tempo_heapsorts_ordenado.append(tempo_vetor_ordenado_heapsort)
+    #aleatorio
+    inicio_tmp = time.time()
+    result_vetor_aleatorio_heapsort = heap_sort(vetor_aleatorio)
+    fim_tmp = time.time()
+    tempo_vetor_aleatorio_heapsort = fim_tmp - inicio_tmp
+    vet_tempo_heapsorts_aleatorio.append(tempo_vetor_aleatorio_heapsort)
+    #reverso
+    inicio_tmp = time.time()
+    result_vetor_reverso_heapsort = heap_sort(vetor_reverso)
+    fim_tmp = time.time()
+    tempo_vetor_reverso_heapsort = fim_tmp - inicio_tmp
+    vet_tempo_heapsorts_reverso.append(tempo_vetor_reverso_heapsort)
+    #quase ordenado
+    inicio_tmp = time.time()
+    result_vetor_quase_ordenado_heapsort = heap_sort(vetor_quase_ordenado)
+    fim_tmp = time.time()
+    tempo_vetor_quase_ordenado_heapsort = fim_tmp - inicio_tmp
+    vet_tempo_heapsorts_quase_ordenado.append(tempo_vetor_quase_ordenado_heapsort)
+    #===============================quicksorts=========================================
+    #ordenado
+    inicio_tmp = time.time()
+    result_vetor_ordenado_quicksort = quick_sort(vetor_ordenado)
+    fim_tmp = time.time()
+    tempo_vetor_ordenado_quicksort = fim_tmp - inicio_tmp
+    vet_tempo_quicksorts_ordenado.append(tempo_vetor_ordenado_quicksort)
+    #aleatorio
+    inicio_tmp = time.time()
+    result_vetor_aleatorio_quicksort = quick_sort(vetor_aleatorio)
+    fim_tmp = time.time()
+    tempo_vetor_aleatorio_quicksort = fim_tmp - inicio_tmp
+    vet_tempo_quicksorts_aleatorio.append(tempo_vetor_aleatorio_quicksort)
+    #reverso
+    inicio_tmp = time.time()
+    result_vetor_reverso_quicksort = quick_sort(vetor_reverso)
+    fim_tmp = time.time()
+    tempo_vetor_reverso_quicksort = fim_tmp - inicio_tmp
+    vet_tempo_quicksorts_reverso.append(tempo_vetor_reverso_quicksort)
+    #quase ordenado
+    inicio_tmp = time.time()
+    result_vetor_quase_ordenado_quicksort = quick_sort(vetor_quase_ordenado)
+    fim_tmp = time.time()
+    tempo_vetor_quase_ordenado_quicksort = fim_tmp - inicio_tmp
+    vet_tempo_quicksorts_quase_ordenado.append(tempo_vetor_quase_ordenado_quicksort)
+    #===============================countingsorts======================================
+    #ordenado
+    inicio_tmp = time.time()
+    result_vetor_ordenado_countingsort = counting_sort(vetor_ordenado)
+    fim_tmp = time.time()
+    tempo_vetor_ordenado_countingsort = fim_tmp - inicio_tmp
+    vet_tempo_countingsorts_ordenado.append(tempo_vetor_ordenado_countingsort)
+    #aleatorio
+    inicio_tmp = time.time()
+    result_vetor_aleatorio_countingsort = counting_sort(vetor_aleatorio)
+    fim_tmp = time.time()
+    tempo_vetor_aleatorio_countingsort = fim_tmp - inicio_tmp
+    vet_tempo_countingsorts_aleatorio.append(tempo_vetor_aleatorio_countingsort)
+    #reverso
+    inicio_tmp = time.time()
+    result_vetor_reverso_countingsort = counting_sort(vetor_reverso)
+    fim_tmp = time.time()
+    tempo_vetor_reverso_countingsort = fim_tmp - inicio_tmp
+    vet_tempo_countingsorts_reverso.append(tempo_vetor_reverso_countingsort)
+    #quase ordenado
+    inicio_tmp = time.time()
+    result_vetor_quase_ordenado_countingsort = counting_sort(vetor_quase_ordenado)
+    fim_tmp = time.time()
+    tempo_vetor_quase_ordenado_countingsort = fim_tmp - inicio_tmp
+    vet_tempo_countingsorts_quase_ordenado.append(tempo_vetor_quase_ordenado_countingsort)
+    #incrementa o tamanho do vetor
+    fim = fim + 5000
+print("[ordenado]")
+print("n   insertions   selections   mergesorts   heapsorts   quicksorts   countingsorts")
+print("-------------------------------------------------------------------------------")
+for i in range(rpt):
+    print("{:.0f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}".format(
+        vet_tamanhos[i], 
+        vet_tempo_insertions_ordenado[i], 
+        vet_tempo_selections_ordenado[i], 
+        vet_tempo_mergesorts_ordenado[i], 
+        vet_tempo_heapsorts_ordenado[i], 
+        vet_tempo_quicksorts_ordenado[i], 
+        vet_tempo_countingsorts_ordenado[i]
+    ))
+print()
+print("[aleatorio]")
+print("n   insertions   selections   mergesorts   heapsorts   quicksorts   countingsorts")
+print("-------------------------------------------------------------------------------")
+for i in range(rpt):
+    print("{:.0f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}".format(
+        vet_tamanhos[i], 
+        vet_tempo_insertions_aleatorio[i], 
+        vet_tempo_selections_aleatorio[i], 
+        vet_tempo_mergesorts_aleatorio[i], 
+        vet_tempo_heapsorts_aleatorio[i], 
+        vet_tempo_quicksorts_aleatorio[i], 
+        vet_tempo_countingsorts_aleatorio[i]
+    ))
+print()
+print("[reverso]")
+print("n   insertions   selections   mergesorts   heapsorts   quicksorts   countingsorts")
+print("-------------------------------------------------------------------------------")
+for i in range(rpt):
+    print("{:.0f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}".format(
+        vet_tamanhos[i], 
+        vet_tempo_insertions_reverso[i], 
+        vet_tempo_selections_reverso[i], 
+        vet_tempo_mergesorts_reverso[i], 
+        vet_tempo_heapsorts_reverso[i], 
+        vet_tempo_quicksorts_reverso[i], 
+        vet_tempo_countingsorts_reverso[i]
+    ))
+print()
+print("[Quase ordenado]")
+print("n   insertions   selections   mergesorts   heapsorts   quicksorts   countingsorts")
+print("-------------------------------------------------------------------------------")
+for i in range(rpt):
+    print("{:.0f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}    {:.6f}".format(
+        vet_tamanhos[i], 
+        vet_tempo_insertions_quase_ordenado[i], 
+        vet_tempo_selections_quase_ordenado[i], 
+        vet_tempo_mergesorts_quase_ordenado[i], 
+        vet_tempo_heapsorts_quase_ordenado[i], 
+        vet_tempo_quicksorts_quase_ordenado[i], 
+        vet_tempo_countingsorts_quase_ordenado[i]
+    ))
 
-# Crie o gráfico
-plt.figure(figsize=(10, 6))  # Defina o tamanho da figura
-
-# Plote as curvas para cada algoritmo
-plt.plot(vet_tamanhos, vet_tempo_selections_ordenado, label='Selection Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_insertions_ordenado, label='Insertion Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_mergesorts_ordenado, label='Merge Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_heapsorts_ordenado, label='Heap Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_quicksorts_ordenado, label='Quick Sort', marker='o')
-plt.plot(vet_tamanhos, vet_tempo_countingsorts_ordenado, label='Counting Sort', marker='o')
-
-# Adicione rótulos aos eixos x e y, e um título
-plt.xlabel('Número de Elementos')
-plt.ylabel('Tempo de Execução (segundos)')
-plt.title('Tempo de execução por numero de elementos do vetor ordenado')
-
-# Mostre a legenda
-plt.legend()
-
-# Exiba o gráfico
-plt.grid(True)  # Adicione uma grade para melhorar a leitura
-plt.show()
